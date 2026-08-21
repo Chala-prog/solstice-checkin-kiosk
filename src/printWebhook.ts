@@ -17,3 +17,12 @@ export async function handlePrintWebhook(req: Request, res: Response) {
     if (alreadyConfirmed) {
       return res.send("Duplicate confirmation ignored");
     } else {
+      await redis.sadd("confirmedJobs", jobId);
+      return res.send("Confirmation processed");
+    }
+  } else if (status === "failed") {
+    return res.send("Job failed");
+  } else {
+    return res.send("Unhandled status");
+  }
+}
