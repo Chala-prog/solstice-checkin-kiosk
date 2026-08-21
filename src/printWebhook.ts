@@ -2,7 +2,7 @@
 import { Request, Response } from "express";
 import Redis from "ioredis";
 
-const redis = new Redis(); // defaults to localhost:6379
+const redis = new Redis();
 
 export async function handlePrintWebhook(req: Request, res: Response) {
   const { jobId, status } = req.body;
@@ -20,6 +20,10 @@ export async function handlePrintWebhook(req: Request, res: Response) {
       await redis.sadd("confirmedJobs", jobId);
       return res.send("Confirmation processed");
     }
+  }
+
+  if (status === "failed") {
+    return res.send("Job failed");
   }
 
   return res.send("Unhandled status");
