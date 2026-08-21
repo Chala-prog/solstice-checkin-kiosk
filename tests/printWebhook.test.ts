@@ -39,16 +39,27 @@ describe("Print webhook replay protection with Redis mock", () => {
     expect(res.text).toBe("Invalid payload");
   });
 
-  it("lists all failed jobs", async () => {
-    // Add two failed jobs via webhook
-    await request(app).post("/webhook").send({ jobId: "111", status: "failed" });
-    await request(app).post("/webhook").send({ jobId: "222", status: "failed" });
+  it("lists both confirmed and failed jobs with counts", async () => {
+    // Add jobs via webhook
+    await request(app).post("/webhook").send({ jobId: "101", status: "confirmed" });
+    await request(app).post("/webhook").send({ jobId: "202", status: "failed" });
 
-    // Call the /failed-jobs endpoint
-    const res = await request(app).get("/failed-jobs");
+    // Call the /jobs endpoint
+    const res = await request(app).get("/jobs");
 
-    // Verify the response contains both job IDs
+    // Verify the response structure and values
     expect(res.status).toBe(200);
-    expect(res.body.failedJobs).toEqual(expect.arrayContaining(["111", "222"]));
-  });
-});
+
+    // Confirmed jobs should include "101"
+    expect(res.body.confirmedJobs).toEqual(expect.arrayContaining(["101"]));
+
+    // Failed jobs should include "202"
+    expect(res.body.failedJobs).toEqual(expect.arrayContaining(["202"]));
+
+    // Counts should reflect the number of jobs
+    expect(typeof res.body.confirmedCount).toBe("number");
+    expect(typeof res.body.failedCount).toBe("number");
+    expect(res.body.confirmedCount).toBeGreaterThanOrEqual(1);
+    expect(res.body.failedCount).toBeGreaterThanOrEqual(1);
+  }); // ✅ closing brace for the test
+}); // ✅ closing brace for the describe
