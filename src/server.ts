@@ -1,4 +1,4 @@
-// src/server.ts (or wherever your app is defined)
+// src/server.ts
 import express from "express";
 import Redis from "ioredis";
 import { handlePrintWebhook } from "./printWebhook";
