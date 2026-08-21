@@ -1,0 +1,14 @@
+{
+  "name": "solstice-checkin-kiosk",
+  "version": "1.0.0",
+  "description": "Event check-in kiosk service for Solstice Events Co.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc && node dist/index.js"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "typescript": "^7.0.2"
+  }
+}
