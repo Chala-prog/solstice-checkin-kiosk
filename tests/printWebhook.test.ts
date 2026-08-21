@@ -3,15 +3,8 @@ jest.mock("ioredis"); // use the Redis mock
 
 import Redis from "ioredis";
 import request from "supertest";
-import express from "express";
-import { handlePrintWebhook } from "../src/printWebhook";
+import app from "../src/server"; // ✅ import the app that includes /failed-jobs
 
-// Define the Express app
-const app = express();
-app.use(express.json());
-app.post("/webhook", handlePrintWebhook);
-
-// Reset Redis mock before each test
 beforeEach(() => {
   (Redis as any).reset();
 });
@@ -57,5 +50,5 @@ describe("Print webhook replay protection with Redis mock", () => {
     // Verify the response contains both job IDs
     expect(res.status).toBe(200);
     expect(res.body.failedJobs).toEqual(expect.arrayContaining(["111", "222"]));
-  }); // ✅ closing brace for the test
-}); // ✅ closing brace for the describe
+  });
+});
