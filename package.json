@@ -8,9 +8,7 @@
     "start": "tsc && node dist/index.js",
     "test": "jest"
   },
-  "dependencies": {
-    // keep your existing dependencies here
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^26.2.0",
     "typescript": "^7.0.2",
