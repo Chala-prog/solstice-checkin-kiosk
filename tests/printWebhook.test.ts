@@ -17,10 +17,25 @@ describe("Print webhook replay protection", () => {
   });
 
   it("ignores duplicate confirmation", async () => {
+    // First confirmation
+    await request(app)
+      .post("/webhook")
+      .send({ jobId: "456", status: "confirmed" });
+
+    // Duplicate confirmation
     const res = await request(app)
       .post("/webhook")
-      .send({ jobId: "123", status: "duplicate" });
+      .send({ jobId: "456", status: "confirmed" });
 
     expect(res.text).toBe("Duplicate confirmation ignored");
+  });
+
+  it("rejects invalid payloads", async () => {
+    const res = await request(app)
+      .post("/webhook")
+      .send({ status: "confirmed" }); // missing jobId
+
+    expect(res.status).toBe(400);
+    expect(res.text).toBe("Invalid payload");
   });
 });
