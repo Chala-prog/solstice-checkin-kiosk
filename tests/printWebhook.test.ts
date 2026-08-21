@@ -46,18 +46,16 @@ describe("Print webhook replay protection with Redis mock", () => {
     expect(res.text).toBe("Invalid payload");
   });
 
-  it("stores failed jobs in Redis", async () => {
-    // Send a webhook request with failed status
-    const res = await request(app)
-      .post("/webhook")
-      .send({ jobId: "999", status: "failed" });
+  it("lists all failed jobs", async () => {
+    // Add two failed jobs via webhook
+    await request(app).post("/webhook").send({ jobId: "111", status: "failed" });
+    await request(app).post("/webhook").send({ jobId: "222", status: "failed" });
 
-    // Verify the response
-    expect(res.text).toBe("Job failed");
+    // Call the /failed-jobs endpoint
+    const res = await request(app).get("/failed-jobs");
 
-    // Verify that the jobId was stored in the failedJobs set
-    const redis = new (require("ioredis").default)();
-    const isFailed = await redis.sismember("failedJobs", "999");
-    expect(isFailed).toBe(1);
-  }); // <-- ✅ closing brace for the test
-}); // <-- ✅ closing brace for the describe
+    // Verify the response contains both job IDs
+    expect(res.status).toBe(200);
+    expect(res.body.failedJobs).toEqual(expect.arrayContaining(["111", "222"]));
+  }); // ✅ closing brace for the test
+}); // ✅ closing brace for the describe
