@@ -50,9 +50,17 @@ None of this is a renamed function or a moved file — it's a different
 correctness model.
 
 ## 🧩 System Architecture
+
 The Solstice Check‑in Kiosk follows an asynchronous webhook model:
 
 ![Architecture Diagram](docs/architecture-diagram.png.png)
+
+### Flow Summary
+- **Frontend (React Kiosk UI)**: Attendees scan QR codes → status shows *Pending…* until confirmation.
+- **Backend (Express + Redis)**: `/webhook` endpoint processes requests, applies duplicate protection, and handles callbacks.
+- **Redis Database**: Tracks confirmed and failed jobs for monitoring.
+- **Admin Dashboard**: Displays job counts and system health for staff.
+
 
 ## What's here
 
