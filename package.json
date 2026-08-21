@@ -2,6 +2,19 @@
   "scripts": {
   "start": "node src/index.js",
   "test": "jest"
+    {
+  "name": "solstice-checkin-kiosk",
+  "version": "1.0.0",
+  "main": "src/index.js",
+    },
+  "dependencies": {
+    // your existing dependencies
+  },
+  "devDependencies": {
+    // your existing devDependencies
+  }
+}
+
 }
 
   "name": "solstice-checkin-kiosk",
