@@ -1,3 +1,5 @@
+![Run Jest Tests](https://github.com/Chala-prog/solstice-checkin-kiosk/actions/workflows/test.yml/badge.svg)
+
 # Phase 4 — Pivot Event: Solstice Events Co. Check-In Kiosk
 
 **Client:** Solstice Events Co. — multi-day tech conference, staff-run
