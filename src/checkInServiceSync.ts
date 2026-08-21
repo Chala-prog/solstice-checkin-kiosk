@@ -1,18 +1,16 @@
-// ORIGINAL synchronous check-in flow.
-// "Checked In" is only shown once printing has actually succeeded —
-// achieved here simply by awaiting the printer call before returning.
-// Duplicate-scan protection is trivial in this model: check the
-// in-memory status before printing, and since there's no gap between
-// "decide to print" and "know the result," there's no window for a
-// second scan to sneak through.
-
 import { printBadgeSync } from "./badgePrinterSync";
 import { AttendeeStore } from "./attendeeStore";
 
+// DEPRECATED — Phase 4 pivot. Superseded by checkInServiceAsync.ts.
+// Not called by the running service. Kept so the before/after diff is
+// visible in the repo rather than silently rewritten in place.
+
+/** @deprecated Superseded by checkInServiceAsync.ts. Not called. */
 export type CheckInResult =
   | { outcome: "checked_in"; attendeeId: string }
   | { outcome: "duplicate_scan"; attendeeId: string };
 
+/** @deprecated Superseded by checkInServiceAsync.ts. Not called. */
 export async function checkInSync(
   store: AttendeeStore,
   attendeeId: string

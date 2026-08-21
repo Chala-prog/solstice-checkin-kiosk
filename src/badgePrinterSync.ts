@@ -1,13 +1,14 @@
-// ORIGINAL synchronous badge-printer client.
-// Simulates the vendor's synchronous REST API — the caller sends a
-// request and blocks until the printer has actually finished, then
-// gets a definitive success/failure response in the same call.
+// DEPRECATED — Phase 4 pivot. The vendor is killing this synchronous
+// API with no extension. Kept for reference only; not called by the
+// running service (see checkInServiceAsync.ts + messageQueue.ts).
 
+/** @deprecated Vendor's synchronous print API killed in the pivot. Not called. */
 export interface PrintResult {
   success: boolean;
   attendeeId: string;
 }
 
+/** @deprecated Vendor's synchronous print API killed in the pivot. Not called. */
 export function printBadgeSync(attendeeId: string): Promise<PrintResult> {
   return new Promise((resolve) => {
     // Simulates real printer latency — the call doesn't return until
