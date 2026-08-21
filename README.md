@@ -115,3 +115,13 @@ double-processing or corrupting state.
   import graph, not just by claim.
 - The pivot is treated as final — no fallback to the sync path, no
   negotiating the duplicate-scan or ordering requirements away.
+
+## Refactor & Review docs
+
+- `docs/SCOPE_DELTA_ANALYSIS.md` — Dropped/Modified/Added, a regression
+  check against the client's original 4 bullets, and honestly-stated
+  trade-offs
+- `docs/BACKLOG.md` — what's still open, ranked by real risk
+- `docs/ADAPTABILITY_INDEX.md` — confidential self-assessment; states
+  its own limitation as a self-rating rather than a peer rating
+
