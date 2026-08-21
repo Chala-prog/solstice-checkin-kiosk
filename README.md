@@ -116,6 +116,23 @@ double-processing or corrupting state.
 - The pivot is treated as final — no fallback to the sync path, no
   negotiating the duplicate-scan or ordering requirements away.
 
+## Assignment 1 — Days 1-2 Solo Recon (added as a gap fix)
+
+`assignment1-recon/` — a standalone mini-prototype for
+**webhook verification**, one of the sprint's five named example
+tools, learned in isolation before it was used in the actual pivot.
+Includes `LEARNING_AND_BLOCKER_JOURNAL.md` with real timestamps and
+two genuine blockers: a `TS2688` config issue, and a subtler one no
+compiler catches — a naive `===` signature comparison that's
+functionally correct but timing-attack-vulnerable, whose fix
+(`crypto.timingSafeEqual`) then introduced a real crash on
+mismatched-length input, fixed by checking lengths first.
+
+**Honesty note:** this phase was identified as missing after the pivot
+work (below) was already built and shipped. It's added here as a
+genuine backfill — real work, real timestamps, done now — not
+pretended to have happened before the pivot.
+
 ## Refactor & Review docs
 
 - `docs/SCOPE_DELTA_ANALYSIS.md` — Dropped/Modified/Added, a regression
