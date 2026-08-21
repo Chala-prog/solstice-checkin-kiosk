@@ -1,27 +1,36 @@
-import { AttendeeStore } from "./attendeeStore";
-import { checkInSync } from "./checkInServiceSync";
+// Phase 4 pivot — service entry point.
+//
+// The vendor is killing the synchronous print API in 48 hours. This is
+// no longer a blocking-call service: checkInSync() is not called.
+// Kiosk scans now publish a print job to the message queue and return
+// immediately with a PENDING state; "Checked In" only appears once the
+// vendor's webhook confirms the job actually completed.
+//
+// The sync call site from the Original Build has been removed here,
+// not commented out or left running alongside the async path — see
+// checkInServiceSync.ts's deprecation notice, and git history for the
+// pre-pivot version.
 
-async function main() {
+import { AttendeeStore } from "./attendeeStore";
+import { startServer } from "./server";
+import { startVendorWorker } from "./vendorWorkerSim";
+
+function main() {
   const store = new AttendeeStore();
 
-  console.log("--- Original (synchronous) check-in flow ---\n");
+  const server = startServer(store);
+  startVendorWorker();
 
-  // 3 test attendees, including one duplicate-scan case, per spec.
-  const scans = ["ATTENDEE-1", "ATTENDEE-2", "ATTENDEE-1", "ATTENDEE-3"];
+  const shutdown = () => {
+    console.log("\n[main] shutting down...");
+    server.close(() => {
+      console.log("[main] server closed.");
+      process.exit(0);
+    });
+  };
 
-  for (const attendeeId of scans) {
-    const result = await checkInSync(store, attendeeId);
-    if (result.outcome === "checked_in") {
-      console.log(`[kiosk] ${attendeeId}: badge printed, screen shows "Checked In"`);
-    } else {
-      console.log(`[kiosk] ${attendeeId}: DUPLICATE SCAN — no second badge printed`);
-    }
-  }
-
-  console.log("\nFinal statuses:");
-  for (const attendeeId of ["ATTENDEE-1", "ATTENDEE-2", "ATTENDEE-3"]) {
-    console.log(`  ${attendeeId}: ${store.getStatus(attendeeId)}`);
-  }
+  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown);
 }
 
 main();
