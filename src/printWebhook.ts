@@ -1,4 +1,5 @@
-import { handlePrintWebhook } from "../src/printWebhook";
+// src/printWebhook.ts
+import { Request, Response } from "express";
 
 export function handlePrintWebhook(req: Request, res: Response) {
   const { jobId, status } = req.body;
