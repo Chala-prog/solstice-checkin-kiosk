@@ -1,10 +1,10 @@
 // src/printWebhook.ts
 import { Request, Response } from "express";
+import Redis from "ioredis";
 
-// In-memory store of confirmed job IDs
-const confirmedJobs = new Set<string>();
+const redis = new Redis(); // defaults to localhost:6379
 
-export function handlePrintWebhook(req: Request, res: Response) {
+export async function handlePrintWebhook(req: Request, res: Response) {
   const { jobId, status } = req.body;
 
   if (!jobId || !status) {
@@ -12,10 +12,12 @@ export function handlePrintWebhook(req: Request, res: Response) {
   }
 
   if (status === "confirmed") {
-    if (confirmedJobs.has(jobId)) {
+    const alreadyConfirmed = await redis.sismember("confirmedJobs", jobId);
+
+    if (alreadyConfirmed) {
       return res.send("Duplicate confirmation ignored");
     } else {
-      confirmedJobs.add(jobId);
+      await redis.sadd("confirmedJobs", jobId);
       return res.send("Confirmation processed");
     }
   }
