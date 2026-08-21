@@ -1,12 +1,22 @@
-// src/printWebhook.ts
-import { Request, Response } from "express";
+// tests/printWebhook.test.ts
+import request from "supertest";
+import express from "express";
+import { handlePrintWebhook } from "../src/printWebhook";
 
-export function handlePrintWebhook(req: Request, res: Response) {
-  const { jobId, status } = req.body;
+const app = express();
+app.use(express.json());
+app.post("/webhook", handlePrintWebhook);
 
-  if (status === "confirmed") {
-    return res.send("Confirmation processed");
-  } else {
-    return res.send("Duplicate confirmation ignored");
-  }
-}
+describe("Print webhook replay protection", () => {
+  it("processes first confirmation and ignores duplicate", async () => {
+    const first = await request(app)
+      .post("/webhook")
+      .send({ jobId: "123", status: "confirmed" });
+    expect(first.text).toBe("Confirmation processed");
+
+    const second = await request(app)
+      .post("/webhook")
+      .send({ jobId: "123", status: "duplicate" });
+    expect(second.text).toBe("Duplicate confirmation ignored");
+  });
+});
