@@ -20,9 +20,13 @@ export async function handlePrintWebhook(req: Request, res: Response) {
       await redis.sadd("confirmedJobs", jobId);
       return res.send("Confirmation processed");
     }
-  } else if (status === "failed") {
-    return res.send("Job failed");
-  } else {
-    return res.send("Unhandled status");
   }
+
+  // 👉 Add this block here
+  if (status === "failed") {
+    await redis.sadd("failedJobs", jobId);   // store failed job IDs
+    return res.send("Job failed");
+  }
+
+  return res.send("Unhandled status");
 }
