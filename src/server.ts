@@ -1,4 +1,4 @@
-// src/server.ts (or wherever you define routes)
+// src/server.ts (or wherever your app is defined)
 import express from "express";
 import Redis from "ioredis";
 import { handlePrintWebhook } from "./printWebhook";
@@ -14,7 +14,7 @@ app.post("/webhook", handlePrintWebhook);
 // ✅ New endpoint to list all failed jobs
 app.get("/failed-jobs", async (req, res) => {
   try {
-    const jobs = await redis.smembers("failedJobs"); // get all job IDs from Redis set
+    const jobs = await redis.smembers("failedJobs");
     res.json({ failedJobs: jobs });
   } catch (error) {
     console.error("Error fetching failed jobs:", error);
