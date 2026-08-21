@@ -49,6 +49,11 @@ count — the *shape* of the problem changed:
 None of this is a renamed function or a moved file — it's a different
 correctness model.
 
+## 🧩 System Architecture
+The Solstice Check‑in Kiosk follows an asynchronous webhook model:
+
+![Architecture Diagram](docs/architecture-diagram.png.png)
+
 ## What's here
 
 ```
